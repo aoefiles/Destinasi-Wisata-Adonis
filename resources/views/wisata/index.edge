@@ -1,0 +1,138 @@
+{{-- resources/views/wisata/index.edge --}}
+@layout.app({ title: "Halaman List Destinasi Wisata" })
+@slot('meta')
+<meta name="description" content="Halaman List Destinasi Wisata">
+@endslot
+@slot('content')
+<div class="row">
+<div class="col-12">
+<div class="card">
+<div class="card-header d-flex
+justify-content-between align-items-center">
+<h5 class="mb-0">
+<i class="bi bi-list-ul me-2"></i>
+Daftar Destinasi Wisata
+</h5>
+<a href="{{ route('wisata.create') }}"
+class="btn btn-success">
+<i class="bi bi-plus-circle me-1"></i>
+Tambah Destinasi Wisata
+</a>
+</div>
+<div class="card-body">
+<form action="{{ route('wisata.index')}}"
+method="GET" class="mb-3 row">
+<div class="col-md-4">
+<input type="text" name="search"
+class="form-control" placeholder="Cari destinasi wisata..."
+autocomplete="off" value="{{ search
+?? '' }}">
+</div>
+<div class="col-md-4">
+<button class="btn
+btn-outline-primary">Cari</button>
+@if(search != '')
+<a href="{{route('wisata.index')}}"
+class="btn btn-outline-danger">Reset</a>
+@endif
+</div>
+</form>
+<div class="table-responsive">
+<table class="table table-striped
+table-hover">
+<thead>
+<tr>
+<th width="5%">No</th>
+<th width="20%">Nama Wisata</th>
+<th width="20%">Kategori</th>
+<th width="15%">Kota</th>
+<th width="15%">Harga Tiket</th>
+<th width="15%">Aksi</th>
+</tr>
+</thead>
+<tbody>
+@each((item, index) in wisatas)
+<tr>
+<td>{{ ((wisatas.currentPage -
+1) * wisatas.perPage) + index + 1 }}</td>
+<td>
+<strong>{{
+item.namaWisata }}</strong>
+</td>
+<td>{{ item.kategori.namaKategori }}</td>
+<td>{{ item.kota.namaKota }}</td>
+<td>Rp{{ item.hargaTiket.toLocaleString('id-ID') }}</td>
+<td>
+<div class="btn-group"
+role="group">
+<a href="{{
+route('wisata.show', [item.id]) }}"
+class="btn btn-sm
+btn-outline-info" title="Lihat Detail">
+<i class="bi
+bi-eye"></i>
+</a>
+<a href="{{
+route('wisata.edit', [item.id]) }}"
+class="btn btn-sm
+btn-outline-warning" title="Edit">
+<i class="bi
+bi-pencil"></i>
+</a>
+<form method="POST"
+action="{{ route('wisata.destroy', [item.id]) }}"
+style="display:
+inline;"
+onsubmit="event.preventDefault(); confirmDelete(this);">
+<input type="hidden"
+name="_method" value="DELETE">
+{{ csrfField() }}
+<button type="submit"
+class="btn btn-sm btn-outline-danger" title="Hapus">
+<i class="bi
+bi-trash"></i>
+</button>
+</form>
+</div>
+</td>
+</tr>
+@endeach
+</tbody>
+</table>
+<hr>
+@if(wisatas.lastPage > 1)
+<div class="d-flex justify-content-center
+mt-4">
+<nav>
+<ul class="pagination">
+@each(page in
+[...Array(wisatas.lastPage).keys()].map(n => n + 1))
+<li class="page-item {{ page ===
+wisatas.currentPage ? 'active' : '' }}">
+@if(search=='' )
+<a class="page-link"
+href="{{
+route('wisata.index', {}, { qs: { page: page} }) }}">
+{{ page }}
+</a>
+@else
+<a class="page-link"
+href="{{
+route('wisata.index', {}, { qs: { page: page, search: search
+|| '' } }) }}">
+{{ page }}
+</a>
+@endif
+</li>
+@endeach
+</ul>
+</nav>
+</div>
+@endif
+</div>
+</div>
+</div>
+</div>
+</div>
+@endslot
+@end

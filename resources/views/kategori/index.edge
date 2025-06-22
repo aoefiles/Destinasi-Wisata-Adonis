@@ -1,0 +1,151 @@
+{{-- resources/views/kategori/index.edge --}}
+@layout.app({ title: "Halaman List Kategori" })
+@slot('meta')
+<meta name="description" content="Halaman List Kategori">
+@endslot
+@slot('content')
+<div class="row">
+<div class="col-12">
+<div class="card">
+<div class="card-header d-flex
+justify-content-between align-items-center">
+<h5 class="mb-0">
+<i class="bi bi-list-ul me-2"></i>
+Daftar Kategori
+</h5>
+<a href="{{ route('kategori.create') }}"
+class="btn btn-success">
+<i class="bi bi-plus-circle me-1"></i>
+Tambah Kategori
+</a>
+</div>
+<div class="card-body">
+<form action="{{ route('kategori.index')}}"
+method="GET" class="mb-3 row">
+<div class="col-md-4">
+<input type="text" name="search"
+class="form-control" placeholder="Cari kategori..."
+autocomplete="off" value="{{ search
+?? '' }}">
+</div>
+<div class="col-md-4">
+<button class="btn
+btn-outline-primary">Cari</button>
+@if(search != '')
+<a href="{{route('kategori.index')}}"
+class="btn btn-outline-danger">Reset</a>
+@endif
+</div>
+</form>
+<div class="table-responsive">
+<table class="table table-striped
+table-hover">
+<thead>
+<tr>
+<th width="5%">No</th>
+<th width="25%">Nama Kategori</th>
+<th width="45%">Deskripsi</th>
+<th width="15%">Tanggal
+Dibuat</th>
+<th width="10%">Aksi</th>
+</tr>
+</thead>
+<tbody>
+@each((item, index) in kategoris)
+<tr>
+<td>{{ ((kategoris.currentPage -
+1) * kategoris.perPage) + index + 1 }}</td>
+<td>
+<strong>{{
+item.namaKategori }}</strong>
+</td>
+<td>
+@if(item.deskripsi)
+{{ item.deskripsi.length >
+100 ? item.deskripsi.substring(0, 100) + '...' :
+item.deskripsi }}
+@else
+<em class="text-muted">Tidak
+ada deskripsi</em>
+@endif
+</td>
+<td>
+<small class="text-muted">
+{{
+item.createdAt.toFormat('dd/MM/yyyy HH:mm') }}
+</small>
+</td>
+<td>
+<div class="btn-group"
+role="group">
+<a href="{{
+route('kategori.show', [item.id]) }}"
+class="btn btn-sm
+btn-outline-info" title="Lihat Detail">
+<i class="bi
+bi-eye"></i>
+</a>
+<a href="{{
+route('kategori.edit', [item.id]) }}"
+class="btn btn-sm
+btn-outline-warning" title="Edit">
+<i class="bi
+bi-pencil"></i>
+</a>
+<form method="POST"
+action="{{ route('kategori.destroy', [item.id]) }}"
+style="display:
+inline;"
+onsubmit="event.preventDefault(); confirmDelete(this);">
+<input type="hidden"
+name="_method" value="DELETE"> {{-- Ubah menjadi DELETE --}}
+{{ csrfField() }}
+<button type="submit"
+class="btn btn-sm btn-outline-danger" title="Hapus">
+<i class="bi
+bi-trash"></i>
+</button>
+</form>
+</div>
+</td>
+</tr>
+@endeach
+</tbody>
+</table>
+<hr>
+@if(kategoris.lastPage > 1)
+<div class="d-flex justify-content-center
+mt-4">
+<nav>
+<ul class="pagination">
+@each(page in
+[...Array(kategoris.lastPage).keys()].map(n => n + 1))
+<li class="page-item {{ page ===
+kategoris.currentPage ? 'active' : '' }}">
+@if(search=='' )
+<a class="page-link"
+href="{{
+route('kategori.index', {}, { qs: { page: page} }) }}">
+{{ page }}
+</a>
+@else
+<a class="page-link"
+href="{{
+route('kategori.index', {}, { qs: { page: page, search: search
+|| '' } }) }}">
+{{ page }}
+</a>
+@endif
+</li>
+@endeach
+</ul>
+</nav>
+</div>
+@endif
+</div>
+</div>
+</div>
+</div>
+</div>
+@endslot
+@end

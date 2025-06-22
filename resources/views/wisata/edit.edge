@@ -1,0 +1,163 @@
+{{-- resources/views/wisata/edit.edge --}}
+@layout.app({ title: "Halaman Edit Destinasi Wisata" })
+@slot('meta')
+<meta name="description" content="Halaman Edit Destinasi Wisata">
+@endslot
+@slot('content')
+<div class="row justify-content-center">
+<div class="col-md-8">
+<div class="card">
+<div class="card-header">
+<h5 class="mb-0">
+<i class="bi bi-pencil me-2"></i>
+Edit Destinasi Wisata
+</h5>
+</div>
+<div class="card-body">
+<form method="POST" action="{{
+route('wisata.update', [wisata.id]) }}" enctype="multipart/form-data">
+{{ csrfField() }}
+<input type="hidden" name="_method" value="PUT">
+<div class="mb-3">
+<label for="namaWisata"
+class="form-label">
+Nama Destinasi Wisata <span
+class="text-danger">*</span>
+</label>
+<input type="text"
+class="form-control {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'namaWisata') ? 'is-invalid' : '' }}"
+id="namaWisata"
+name="namaWisata" value="{{ flashMessages.get('old.namaWisata', wisata.namaWisata) }}"
+placeholder="Masukkan nama destinasi wisata" required>
+@if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'namaWisata'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e => e.field === 'namaWisata').message }}
+</div>
+@endif
+</div>
+<div class="mb-3">
+<label for="deskripsi"
+class="form-label">Deskripsi</label>
+<textarea class="form-control {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'deskripsi') ? 'is-invalid' : '' }}"
+id="deskripsi" name="deskripsi"
+rows="4"
+placeholder="Masukkan deskripsi
+(opsional)">{{ flashMessages.get('old.deskripsi', wisata.deskripsi) }}</textarea>
+@if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'deskripsi'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e => e.field === 'deskripsi').message }}
+</div>
+@endif
+</div>
+<div class="mb-3">
+<label for="alamat"
+class="form-label">Alamat</label>
+<input type="text"
+class="form-control {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'alamat') ? 'is-invalid' : '' }}"
+id="alamat" name="alamat" placeholder="Masukkan alamat destinasi wisata"
+value="{{ flashMessages.get('old.alamat', wisata.alamat) }}">
+@if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'alamat'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e => e.field === 'alamat').message }}
+</div>
+@endif
+</div>
+<div class="mb-3">
+<label for="hargaTiket"
+class="form-label">Harga Tiket</label>
+<input type="number"
+class="form-control {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'hargaTiket') ? 'is-invalid' : '' }}"
+id="hargaTiket" name="hargaTiket" placeholder="Masukkan harga tiket"
+value="{{ flashMessages.get('old.hargaTiket', wisata.hargaTiket) }}" min="0">
+@if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'hargaTiket'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e => e.field === 'hargaTiket').message }}
+</div>
+@endif
+</div>
+<div class="mb-3">
+    <label for="kategoriId" class="form-label">Kategori</label>
+    <select class="form-select {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'kategoriId') ? 'is-invalid' : '' }}" id="kategoriId" name="kategoriId" required>
+        <option value="">Pilih Kategori</option>
+        @each((kategori) in kategoris)
+            <option value="{{ kategori.id }}" {{ (flashMessages.get('old.kategoriId') == kategori.id || wisata.kategoriId == kategori.id) ? 'selected' : '' }}>{{ kategori.namaKategori }}</option>
+        @endeach
+    </select>
+    @if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'kategoriId'))
+        <div class="invalid-feedback">
+            {{ flashMessages.get('errors').find(e => e.field === 'kategoriId').message }}
+        </div>
+    @endif
+</div>
+<div class="mb-3">
+    <label for="kotaId" class="form-label">Kota</label>
+    <select class="form-select {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'kotaId') ? 'is-invalid' : '' }}" id="kotaId" name="kotaId" required>
+        <option value="">Pilih Kota</option>
+        @each((kota) in kotas)
+            <option value="{{ kota.id }}" {{ (flashMessages.get('old.kotaId') == kota.id || wisata.kotaId == kota.id) ? 'selected' : '' }}>{{ kota.namaKota }}</option>
+        @endeach
+    </select>
+    @if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'kotaId'))
+        <div class="invalid-feedback">
+            {{ flashMessages.get('errors').find(e => e.field === 'kotaId').message }}
+        </div>
+    @endif
+</div>
+<div class="mb-3">
+    <label for="gambar" class="form-label">Gambar Destinasi (Opsional)</label>
+    @if(wisata.gambarUrl)
+        <div class="mb-2">
+            <img src="{{ wisata.gambarUrl }}" alt="Gambar Destinasi" class="img-thumbnail" style="max-width: 200px;">
+            <small class="text-muted d-block">Gambar saat ini</small>
+        </div>
+    @endif
+    <input class="form-control {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'gambar') ? 'is-invalid' : '' }}" type="file" id="gambar" name="gambar">
+    @if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'gambar'))
+        <div class="invalid-feedback">
+            {{ flashMessages.get('errors').find(e => e.field === 'gambar').message }}
+        </div>
+    @endif
+    <div class="form-text">Biarkan kosong jika tidak ingin mengubah gambar.</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="card bg-light">
+<div class="card-body">
+<h6 class="card-title">
+<i class="bi
+bi-info-circle me-1"></i>
+Informasi Data
+</h6>
+<small class="text-muted">
+<strong>Dibuat:</strong>
+{{ wisata.createdAt.toFormat('dd/MM/yyyy HH:mm')
+}}<br>
+<strong>Diperbarui:</strong> {{
+wisata.updatedAt.toFormat('dd/MM/yyyy HH:mm')
+}}
+</small>
+</div>
+</div>
+</div>
+</div>
+<div class="d-grid gap-2 d-md-flex
+justify-content-md-between mt-3">
+<button type="submit" class="btn
+btn-primary">
+<i class="bi bi-check-circle
+me-1"></i>
+Perbarui Destinasi Wisata
+</button>
+<a href="{{ route('wisata.index') }}"
+class="btn btn-secondary">
+<i class="bi bi-arrow-left me-1"></i>
+Kembali
+</a>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+@endslot
+@end

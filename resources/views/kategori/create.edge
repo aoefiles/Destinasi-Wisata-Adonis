@@ -1,0 +1,85 @@
+{{-- resources/views/kategori/create.edge --}}
+@layout.app({ title: "Halaman Tambah Kategori" })
+@slot('meta')
+<meta name="description" content="Halaman Tambah Kategori">
+@endslot
+@slot('content')
+<div class="row justify-content-center">
+<div class="col-md-8">
+<div class="card">
+<div class="card-header">
+<h5 class="mb-0">
+<i class="bi bi-plus-circle me-2"></i>
+Tambah Kategori Baru
+</h5>
+</div>
+<div class="card-body">
+<form method="POST" action="{{
+route('kategori.store') }}">
+{{ csrfField() }}
+<div class="mb-3">
+<label for="namaKategori"
+class="form-label">
+Nama Kategori <span
+class="text-danger">*</span>
+</label>
+<input type="text"
+class="form-control {{
+flashMessages.get('errors') && flashMessages.get('errors').find(e
+=> e.field === 'namaKategori') ? 'is-invalid' : '' }}"
+id="namaKategori"
+name="namaKategori" placeholder="Masukkan nama kategori"
+value="{{
+flashMessages.get('old.namaKategori','') }}">
+@if(flashMessages.get('errors') &&
+flashMessages.get('errors').find(e => e.field ===
+'namaKategori'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e
+=> e.field === 'namaKategori').message }}
+</div>
+@endif
+</div>
+<div class="mb-3">
+<label for="deskripsi"
+class="form-label">Deskripsi</label>
+<textarea class="form-control {{
+flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'deskripsi') ? 'is-invalid' : '' }}"
+id="deskripsi" name="deskripsi"
+rows="4"
+placeholder="Masukkan deskripsi
+(opsional)">{{ flashMessages.get('old.deskripsi','')
+}}</textarea>
+@if(flashMessages.get('errors') &&
+flashMessages.get('errors').find(e => e.field === 'deskripsi'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e
+=> e.field === 'deskripsi').message }}
+</div>
+@endif
+<div class="form-text">
+Opsional - Berikan keterangan atau
+deskripsi untuk kategori ini.
+</div>
+</div>
+<div class="d-grid gap-2 d-md-flex
+justify-content-md-between">
+<button type="submit" class="btn
+btn-primary">
+<i class="bi bi-check-circle
+me-1"></i>
+Simpan Kategori
+</button>
+<a href="{{ route('kategori.index') }}"
+class="btn btn-secondary">
+<i class="bi bi-arrow-left me-1"></i>
+Kembali
+</a>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+@endslot
+@end

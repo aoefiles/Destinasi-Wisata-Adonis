@@ -1,0 +1,115 @@
+{{-- resources/views/dashboard.edge --}}
+@layout.app({ title: "Halaman Dashboard" })
+@slot('meta')
+<meta name="description" content="Halaman Dashboard">
+@endslot
+@slot('content')
+<div class="container-fluid">
+    <div class="row">
+        <main class="col-md-12">
+            <div
+                class="d-flex justify-content-between flex-wrap
+                flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+            </div>
+
+            <div class="row">
+                {{-- Card Selamat Datang --}}
+                <div class="col-md-8 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Selamat
+                                Datang, {{ auth.user.fullName }}!</h5>
+                            <p class="card-text">Anda berhasil
+                                login ke sistem. Selamat menggunakan aplikasi.</p>
+                            <p class="text-muted mb-0">
+                                <small>Email: {{ auth.user.email
+                                    }}</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Card Status Online --}}
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex
+                                justify-content-between">
+                                <div>
+                                    <h6
+                                        class="card-title">Status</h6>
+                                    <h4>Online</h4>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi
+                                        bi-check-circle-fill fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Statistik Aplikasi --}}
+            <div class="row mt-4">
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card text-center bg-info text-white">
+                        <div class="card-body">
+                            <i class="bi bi-people-fill display-4"></i>
+                            <h5 class="card-title mt-2">{{ totalUsers }}</h5>
+                            <p class="card-text">Total Pengguna</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card text-center bg-success text-white">
+                        <div class="card-body">
+                            <i class="bi bi-building-fill-add display-4"></i>
+                            <h5 class="card-title mt-2">{{ totalWisata }}</h5>
+                            <p class="card-text">Total Destinasi Wisata</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card text-center bg-warning text-white">
+                        <div class="card-body">
+                            <i class="bi bi-bookmark-fill display-4"></i>
+                            <h5 class="card-title mt-2">{{ totalKategori }}</h5>
+                            <p class="card-text">Total Kategori</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card text-center bg-danger text-white">
+                        <div class="card-body">
+                            <i class="bi bi-pin-map-fill display-4"></i>
+                            <h5 class="card-title mt-2">{{ totalKota }}</h5>
+                            <p class="card-text">Total Kota</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card text-center bg-secondary text-white">
+                        <div class="card-body">
+                            <i class="bi bi-chat-dots-fill display-4"></i>
+                            <h5 class="card-title mt-2">{{ totalUlasan }}</h5>
+                            <p class="card-text">Total Ulasan</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="card text-center bg-dark text-white">
+                        <div class="card-body">
+                            <i class="bi bi-star-fill display-4"></i>
+                            <h5 class="card-title mt-2">{{ averageRating }}</h5>
+                            <p class="card-text">Rata-rata Rating</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+@endslot
+@end

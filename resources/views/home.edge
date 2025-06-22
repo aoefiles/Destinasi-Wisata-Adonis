@@ -1,0 +1,109 @@
+{{-- resources/views/home.edge --}}
+@layout.app({ title: "Destinasi Wisata Populer" })
+@slot('meta')
+<meta name="description" content="Destinasi Wisata Populer">
+@endslot
+@slot('content')
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-star-fill me-2"></i> Destinasi Wisata Populer</h5>
+                <p class="text-muted mb-0">Temukan destinasi wisata dengan rating tertinggi!</p>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('home') }}" method="GET" class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            <label for="kota" class="form-label visually-hidden">Filter Kota</label>
+                            <select name="kota" id="kota" class="form-select">
+                                <option value="">Semua Kota</option>
+                                @each((kotaItem) in kotas)
+                                    <option value="{{ kotaItem.namaKota }}" {{ searchKota === kotaItem.namaKota ? 'selected' : '' }}>{{ kotaItem.namaKota }}</option>
+                                @endeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="harga_max" class="form-label visually-hidden">Harga Tiket Maksimal</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" name="harga_max" id="harga_max" class="form-control" placeholder="Harga Tiket Maksimal" value="{{ maxHarga ?? '' }}" min="0">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-filter-right me-1"></i> Filter</button>
+                        </div>
+                        @if(searchKota || maxHarga)
+                            <div class="col-12">
+                                <a href="{{ route('home') }}" class="btn btn-outline-secondary w-100"><i class="bi bi-x-circle me-1"></i> Reset Filter</a>
+                            </div>
+                        @endif
+                    </div>
+                </form>
+
+                @if(wisatas.length > 0)
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        @each((wisataItem) in wisatas)
+                            <div class="col">
+                                <div class="card h-100 shadow-sm">
+                                    @if(wisataItem.gambarUrl)
+                                        <img src="{{ wisataItem.gambarUrl }}" class="card-img-top" alt="{{ wisataItem.namaWisata }}" style="height: 200px; object-fit: cover;">
+                                    @else
+                                        <img src="https://placehold.co/600x400/FFF/000?text=No+Image" class="card-img-top" alt="No Image" style="height: 200px; object-fit: cover;">
+                                    @endif
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">{{ wisataItem.namaWisata }}</h5>
+                                        <p class="card-text text-muted mb-2">
+                                            <i class="bi bi-tag-fill me-1"></i> {{ wisataItem.kategori.namaKategori }}
+                                            <span class="ms-2"><i class="bi bi-geo-alt-fill me-1"></i> {{ wisataItem.kota.namaKota }}</span>
+                                        </p>
+                                        <p class="card-text">
+                                            {{ wisataItem.deskripsi && wisataItem.deskripsi.length > 100 ? wisataItem.deskripsi.substring(0, 100) + '...' : wisataItem.deskripsi || 'Tidak ada deskripsi.' }}
+                                        </p>
+                                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                                            <div>
+                                                @if(wisataItem.$extras.average_rating)
+                                                    <span class="badge bg-primary fs-6">
+                                                        <i class="bi bi-star-fill me-1"></i> {{ wisataItem.$extras.average_rating.toFixed(1) }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary">Belum ada rating</span>
+                                                @endif
+                                                <span class="badge bg-info ms-2">Rp{{ wisataItem.hargaTiket.toLocaleString('id-ID') }}</span>
+                                            </div>
+                                            <a href="{{ route('wisata.show', { id: wisataItem.id }) }}" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endeach
+                    </div>
+
+                    <hr class="mt-5">
+                    @if(wisatas.lastPage > 1)
+                        <div class="d-flex justify-content-center mt-4">
+                            <nav>
+                                <ul class="pagination">
+                                    @each(page in [...Array(wisatas.lastPage).keys()].map(n => n + 1))
+                                        <li class="page-item {{ page === wisatas.currentPage ? 'active' : '' }}">
+                                            <a class="page-link"
+                                               href="{{ route('home', {}, { qs: { page: page, kota: searchKota, harga_max: maxHarga } }) }}">
+                                                {{ page }}
+                                            </a>
+                                        </li>
+                                    @endeach
+                                </ul>
+                            </nav>
+                        </div>
+                    @endif
+                @else
+                    <div class="alert alert-warning text-center" role="alert">
+                        Tidak ada destinasi wisata yang ditemukan dengan filter yang diberikan.
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endslot
+@end

@@ -1,0 +1,97 @@
+{{-- resources/views/kota/edit.edge --}}
+@layout.app({ title: "Halaman Edit Kota" })
+@slot('meta')
+<meta name="description" content="Halaman Edit Kota">
+@endslot
+@slot('content')
+<div class="row justify-content-center">
+<div class="col-md-8">
+<div class="card">
+<div class="card-header">
+<h5 class="mb-0">
+<i class="bi bi-pencil me-2"></i>
+Edit Kota
+</h5>
+</div>
+<div class="card-body">
+<form method="POST" action="{{
+route('kota.update', [kota.id]) }}">
+{{ csrfField() }}
+<input type="hidden" name="_method" value="PUT">
+<div class="mb-3">
+<label for="namaKota"
+class="form-label">
+Nama Kota <span
+class="text-danger">*</span>
+</label>
+<input type="text"
+class="form-control {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'namaKota') ? 'is-invalid' : '' }}"
+id="namaKota"
+name="namaKota" value="{{ flashMessages.get('old.namaKota', kota.namaKota) }}"
+placeholder="Masukkan nama kota" required>
+@if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'namaKota'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e => e.field === 'namaKota').message }}
+</div>
+@endif
+</div>
+<div class="mb-3">
+<label for="deskripsi"
+class="form-label">Deskripsi</label>
+<textarea class="form-control {{ flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'deskripsi') ? 'is-invalid' : '' }}"
+id="deskripsi" name="deskripsi"
+rows="4"
+placeholder="Masukkan deskripsi
+(opsional)">{{ flashMessages.get('old.deskripsi', kota.deskripsi) }}</textarea>
+@if(flashMessages.get('errors') && flashMessages.get('errors').find(e => e.field === 'deskripsi'))
+<div class="invalid-feedback">
+{{ flashMessages.get('errors').find(e => e.field === 'deskripsi').message }}
+</div>
+@endif
+<div class="form-text">
+Opsional - Berikan keterangan atau
+deskripsi untuk kota ini.
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="card bg-light">
+<div class="card-body">
+<h6 class="card-title">
+<i class="bi
+bi-info-circle me-1"></i>
+Informasi Data
+</h6>
+<small class="text-muted">
+<strong>Dibuat:</strong>
+{{ kota.createdAt.toFormat('dd/MM/yyyy HH:mm')
+}}<br>
+<strong>Diperbarui:</strong> {{
+kota.updatedAt.toFormat('dd/MM/yyyy HH:mm')
+}}
+</small>
+</div>
+</div>
+</div>
+</div>
+<div class="d-grid gap-2 d-md-flex
+justify-content-md-between mt-3">
+<button type="submit" class="btn
+btn-primary">
+<i class="bi bi-check-circle
+me-1"></i>
+Perbarui Kota
+</button>
+<a href="{{ route('kota.index') }}"
+class="btn btn-secondary">
+<i class="bi bi-arrow-left me-1"></i>
+Kembali
+</a>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+@endslot
+@end
